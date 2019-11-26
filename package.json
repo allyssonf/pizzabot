@@ -5,13 +5,14 @@
         "start": "node app.js"
     },
     "dependencies": {
-        "express": "4.17.1",
         "@cloudant/cloudant": "4.2.2",
         "body-parser": "1.19.0",
-        "method-override": "2.3.x",
-        "errorhandler": "1.4.x",
         "connect-multiparty": "2.0.x",
-        "ibm-watson": "5.1.0"
+        "dotenv": "^8.2.0",
+        "errorhandler": "1.4.x",
+        "express": "4.17.1",
+        "ibm-watson": "5.1.0",
+        "method-override": "2.3.x"
     },
     "engines": {
         "node": "10.5.0"
