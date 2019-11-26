@@ -5,10 +5,12 @@ const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
 const WatsonAssistant = require('./config/bot.js');
 
-const assistant = new WatsonAssistant();
-const app = express();
-
 const applicationPort = process.env.PORT || 3000;
+const apiKey = process.env.API_KEY || '';
+const workspaceId = process.env.WORKSPACE_ID || '';
+
+const app = express();
+const assistant = new WatsonAssistant(apiKey, workspaceId);
 
 // all environments
 app.set('views', __dirname + '/views');
