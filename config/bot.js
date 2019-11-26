@@ -9,13 +9,13 @@ class WatsonAssistant {
     constructor() {
         this.assistant = new AssistantV1({
             authenticator: new IamAuthenticator({
-                apikey: '<API_KEY>'
+                apikey: process.env.API_KEY || ''
             }),
             url: 'https://gateway.watsonplatform.net/assistant/api/',
             version: '2018-02-16'
         });
 
-        this.workspaceId = '<SKILL_ID>';
+        this.workspaceId = process.env.WORKSPACE_ID || '';
 
         this.context = null;
     }
