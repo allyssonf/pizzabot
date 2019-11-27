@@ -1,12 +1,13 @@
 const AssistantV1 = require('ibm-watson/assistant/v1');
 const { IamAuthenticator } = require('ibm-watson/auth');
+const Cloudant = require('@cloudant/cloudant');
 
 /**
- * Watson Assistant Class
- * This class encapsulates IBM AssistantV1 calls
+ * Classe do Watson Assistant
+ * Encapsula o componente de acesso do assistente
  */
 class WatsonAssistant {
-    constructor(apikey, workspaceId) {
+    constructor(apikey, workspaceId, dbUrl, dbName) {
         this.assistant = new AssistantV1({
             authenticator: new IamAuthenticator({
                 apikey
@@ -17,13 +18,19 @@ class WatsonAssistant {
 
         this.workspaceId = workspaceId;
 
+        this.cloudant = new Cloudant({
+            url: dbUrl
+        });
+
+        this.mydb = this.cloudant.db.use(dbName);
+
         this.context = null;
     }
 
     /**
-     * Send message to Watson Assistant Service
-     * @param {String} message message to be sent to server.
-     * @param {Function} cb callback to be fired on service response.
+     * Método de envio de mensagens para o Watson Assistant
+     * @param {String} message mensagem a ser enviada.
+     * @param {Function} cb função de retorno na resposta do serviço.
      */
     sendMessage(message, cb) {
         const params = {
@@ -42,10 +49,14 @@ class WatsonAssistant {
 
         this.assistant.message(params).then(response => {
             if (response && response.result) {
-                console.log(JSON.stringify(response.result));
+                this.context = response.result.context;
 
-                this.context = response.context;
+                // Envia resposta ao cliente. Não precisa esperar
+                // salvar no banco pra responder.
                 cb(this.processResponse(response.result));
+
+                // Salva o pedido no banco se a condição for verdadeira.
+                this.saveOrderToDB(response.result);
             }
         }).catch(err => {
             console.log(err);
@@ -54,9 +65,9 @@ class WatsonAssistant {
     }
 
     /**
-     * Process service response
-     * @param {Object} result response from Watson Assistant API Call
-     * @returns {String} message to be sent to client
+     * Processa a resposta do servidor
+     * @param {Object} result objeto de retorno da chamada do assistente
+     * @returns {String} mensagem a ser enviada ao cliente.
      */
     processResponse(result) {
         let resultMessage = 'Erro ao processar resposta do Watson Assistant!';
@@ -68,6 +79,41 @@ class WatsonAssistant {
         }
 
         return resultMessage;
+    }
+
+    /**
+     * Salva pedido no banco de dados se estiver completo
+     * @param {JSON} data dados a serem salvos
+     */
+    saveOrderToDB(data) {
+        if (data.context) {
+            const { pizza_ordered } = data.context;
+            if (pizza_ordered) {
+                const { sabor, tamanho, cep } = data.context;
+                const timestamp = new Date().getTime();
+                this.mydb.insert({ sabor, tamanho, cep, timestamp });
+            }
+        }
+    }
+
+    /**
+     * Retorna um vetor dos pedidos de pizza já feitos.
+     * @param {Function} cb função de retorno.
+     */
+    getOrders(cb) {
+        this.mydb.list({ include_docs: true }).then(result => {
+            if (result.rows && result.rows.length > 0) {
+                const returnValue = result.rows.map(elem => {
+                    return elem.doc;
+                });
+                cb(returnValue);
+            } else {
+                cb([]);
+            }
+        }).catch(error => {
+            console.log(error);
+            cb([]);
+        });
     }
 }
 
