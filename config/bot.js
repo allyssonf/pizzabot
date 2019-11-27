@@ -6,10 +6,10 @@ const { IamAuthenticator } = require('ibm-watson/auth');
  * This class encapsulates IBM AssistantV1 calls
  */
 class WatsonAssistant {
-    constructor(apiKey, workspaceId) {
+    constructor(apikey, workspaceId) {
         this.assistant = new AssistantV1({
             authenticator: new IamAuthenticator({
-                apikey: apiKey
+                apikey
             }),
             url: 'https://gateway.watsonplatform.net/assistant/api/',
             version: '2018-02-16'
