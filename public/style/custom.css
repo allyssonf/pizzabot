@@ -1,4 +1,82 @@
 @import url(https://fonts.gogleapis.com/css?family=Source+Sans+Pro:400,600);
+
+:root {
+    /* Set neon color */
+    --neon-text-color: #f40;
+    --neon-border-color: #08f;
+}
+
+.neon-header{
+    padding: 1rem 3rem;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+h1 {
+    font-size: 3.375rem;
+    font-weight: 200;
+    font-style: italic;
+    color: #fff;
+    padding: 3rem 6rem 3rem;
+    border: 0.4rem solid #fff;
+    border-radius: 2rem;
+    text-transform: uppercase;
+    animation: flicker 1.5s infinite alternate;
+    text-align: center;
+}
+
+h1::-moz-selection {
+    background-color: var(--neon-border-color);
+    color: var(--neon-text-color);
+}
+
+h1::selection {
+    background-color: var(--neon-border-color);
+    color: var(--neon-text-color);
+}
+
+h1:focus {
+    outline: none;
+}
+
+/* Animate neon flicker */
+@keyframes flicker {
+
+    0%,
+    19%,
+    21%,
+    23%,
+    25%,
+    54%,
+    56%,
+    100% {
+
+        text-shadow:
+            -0.2rem -0.2rem 1rem #fff,
+            0.2rem 0.2rem 1rem #fff,
+            0 0 2rem var(--neon-text-color),
+            0 0 4rem var(--neon-text-color),
+            0 0 6rem var(--neon-text-color),
+            0 0 8rem var(--neon-text-color),
+            0 0 10rem var(--neon-text-color);
+
+        box-shadow:
+            0 0 .5rem #fff,
+            inset 0 0 .5rem #fff,
+            0 0 2rem var(--neon-border-color),
+            inset 0 0 2rem var(--neon-border-color),
+            0 0 4rem var(--neon-border-color),
+            inset 0 0 4rem var(--neon-border-color);
+    }
+
+    20%,
+    24%,
+    55% {
+        text-shadow: none;
+        box-shadow: none;
+    }
+}
+
 html,
 body {
     width: 100%;
@@ -17,7 +95,7 @@ body {
     justify-content: space-between;
 }
 
-body::before{
+body::before {
     content: '';
     width: 100%;
     height: 100%;
@@ -66,6 +144,7 @@ body::before{
     from {
         height: 40px;
     }
+
     to {
         height: 75%
     }
@@ -75,6 +154,7 @@ body::before{
     from {
         height: 75%;
     }
+
     to {
         height: 40px
     }
@@ -106,7 +186,7 @@ body::before{
     padding-top: 10px;
 }
 
-.chat-popup .chat-body::-webkit-scrollbar{
+.chat-popup .chat-body::-webkit-scrollbar {
     visibility: hidden;
 }
 
@@ -114,6 +194,7 @@ body::before{
     from {
         opacity: 0;
     }
+
     to {
         opacity: 1;
     }
@@ -123,24 +204,27 @@ body::before{
     from {
         opacity: 1;
     }
+
     to {
         opacity: 0;
     }
 }
 
-.chat-popup .chat-body .chat-date{
+.chat-popup .chat-body .chat-date {
     text-align: center;
     width: 100%;
     margin-bottom: 10px;
 }
-.chat-popup .chat-body .chat-date span{
+
+.chat-popup .chat-body .chat-date span {
     font-size: 14px;
     display: inline-block;
     color: #bebebe;
     width: 100%;
 }
 
-.chat-popup .chat-body .chat-date span:before, .chat-popup .chat-body .chat-date span:after{
+.chat-popup .chat-body .chat-date span:before,
+.chat-popup .chat-body .chat-date span:after {
     display: inline-block;
     width: 30%;
     height: 1px;
@@ -148,11 +232,13 @@ body::before{
     content: '';
     background-color: #c3c3c3;
 }
-.chat-popup .chat-body .chat-date span:before{
+
+.chat-popup .chat-body .chat-date span:before {
     margin-right: 2px;
     left: 0;
 }
-.chat-popup .chat-body .chat-date span:after{
+
+.chat-popup .chat-body .chat-date span:after {
     right: 0;
     margin-left: 2px;
 }
@@ -203,7 +289,7 @@ body::before{
 }
 
 
-.chat-footer{
+.chat-footer {
     opacity: 0;
     animation-duration: 2s;
     animation-fill-mode: forwards;
@@ -219,7 +305,8 @@ body::before{
     display: flex;
     flex-direction: row;
 }
-.chat-footer input{
+
+.chat-footer input {
     color: #1a1a1a;
     border: 0;
     background-color: #eceff1;
@@ -228,7 +315,7 @@ body::before{
     width: 80%;
 }
 
-.chat-footer .send-btn{
+.chat-footer .send-btn {
     width: 20%;
     content: 'a';
     display: inline-block;
